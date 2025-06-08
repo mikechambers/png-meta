@@ -144,7 +144,7 @@ def analyze_screenshot(image_path: Path) -> ScreenshotAnalysis:
 **title**: A concise, descriptive title for the image (3-8 words)
 **short_description**: A brief one-sentence description (under 100 characters)
 **long_description**: A detailed description of what's shown in the image (2-4 sentences)
-**ai_description**: Technical AI analysis including visual elements, composition, colors, style, etc. (2-3 sentences)
+**ai_description**: Technical analysis to use to describe to AI including visual elements, composition, colors, style, etc. (2-3 sentences)
 **explicit_content**: Boolean - true if image contains adult/explicit content, false otherwise
 **embedded_text**: Extract ALL readable text from the image, preserving structure when possible (include UI elements, buttons, menus, document content, code, etc.)
 **apps**: List of application names, window titles, or software interfaces visible in the image
@@ -153,7 +153,7 @@ def analyze_screenshot(image_path: Path) -> ScreenshotAnalysis:
   - "photography": Real-world photos, camera captures, people, places, objects
   - "graphic": Digital art, illustrations, logos, designs, charts, diagrams
 
-Be thorough in text extraction and accurate in classification. For embedded_text, preserve formatting with line breaks where appropriate."""
+Be thorough in text extraction and accurate in classification."""
         
         # Make API call with structured output
         response = openai_client.beta.chat.completions.parse(
