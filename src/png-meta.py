@@ -19,8 +19,7 @@ from openai import OpenAI
 from PIL import Image
 from PIL.PngImagePlugin import PngInfo
 from pydantic import BaseModel
-
-META_TAG_NAME="ANALYSIS"
+from config import META_TAG_NAME
 
 # Load environment variables from .env file
 try:
@@ -186,7 +185,7 @@ Be thorough in text extraction and accurate in classification."""
         return ScreenshotAnalysis.from_pydantic_model(analysis_model, image_path)
         
     except Exception as e:
-        print(f"❌ Error calling OpenAI API: {e}")
+        print(f"Error calling OpenAI API: {e}")
         return create_error_analysis(image_path, f"API error: {e}")
 
 
@@ -230,7 +229,7 @@ def store_analysis_in_png(image_path: Path, analysis: ScreenshotAnalysis) -> boo
             return True
             
     except Exception as e:
-        print(f"❌ Error storing metadata in PNG: {e}")
+        print(f"Error storing metadata in PNG: {e}")
         return False
 
 
@@ -243,7 +242,7 @@ def has_analysis_metadata(image_path: Path) -> bool:
         return False
     except Exception as e:
         if verbose_mode:
-            print(f"⚠️  Error checking metadata for {image_path.name}: {e}")
+            print(f"Error checking metadata for {image_path.name}: {e}")
         return False
 
 
@@ -254,7 +253,7 @@ def scan_and_analyze_directory(directory: Path):
     png_files = list(directory.glob("*.png"))
     total_files = len(png_files)
     
-    print(f"🔍 Scanning {total_files} PNG files in: {directory}")
+    print(f"Scanning {total_files} PNG files in: {directory}")
     
     files_to_analyze = []
     files_with_metadata = 0
@@ -264,20 +263,20 @@ def scan_and_analyze_directory(directory: Path):
         if has_analysis_metadata(png_file):
             files_with_metadata += 1
             if verbose_mode:
-                print(f"   ✅ {png_file.name} - already has analysis metadata")
+                print(f"{png_file.name} - already has analysis metadata")
         else:
             files_to_analyze.append(png_file)
             if verbose_mode:
-                print(f"   📝 {png_file.name} - needs analysis")
+                print(f"{png_file.name} - needs analysis")
     
-    print(f"📊 Summary: {files_with_metadata} files already analyzed, {len(files_to_analyze)} files need analysis")
+    print(f"Summary: {files_with_metadata} files already analyzed, {len(files_to_analyze)} files need analysis")
     
     if not files_to_analyze:
-        print("🎉 All PNG files already have analysis metadata!")
+        print("All PNG files already have analysis metadata!")
         return
     
     # Second pass: analyze files that need it
-    print(f"\n🤖 Starting analysis of {len(files_to_analyze)} files...")
+    print(f"\nStarting analysis of {len(files_to_analyze)} files...")
     
     for i, png_file in enumerate(files_to_analyze, 1):
         print(f"\n[{i}/{len(files_to_analyze)}] Analyzing: {png_file.name}")
@@ -290,24 +289,24 @@ def scan_and_analyze_directory(directory: Path):
                 display_analysis(analysis)
             else:
                 # Show brief results in non-verbose mode
-                print(f"   📝 {analysis.title}")
-                print(f"   💭 {analysis.short_description}")
-                print(f"   🏷️  Type: {analysis.type}")
-                print(f"   📱 Apps: {', '.join(analysis.apps) if analysis.apps else 'None detected'}")
+                print(f"{analysis.title}")
+                print(f"{analysis.short_description}")
+                print(f"Type: {analysis.type}")
+                print(f"Apps: {', '.join(analysis.apps) if analysis.apps else 'None detected'}")
             
             # Store analysis in PNG metadata
-            print(f"   💾 Storing analysis in PNG metadata...")
+            print(f"Storing analysis in PNG metadata...")
             success = store_analysis_in_png(png_file, analysis)
             if success:
-                print(f"   ✅ Analysis saved to PNG metadata")
+                print(f"Analysis saved to PNG metadata")
             else:
-                print(f"   ❌ Failed to save analysis to PNG metadata")
+                print(f"Failed to save analysis to PNG metadata")
                 
         except Exception as e:
-            print(f"   ❌ Error analyzing {png_file.name}: {e}")
+            print(f"Error analyzing {png_file.name}: {e}")
             continue
     
-    print(f"\n🎉 Scan complete! Analyzed {len(files_to_analyze)} PNG files.")
+    print(f"\nScan complete! Analyzed {len(files_to_analyze)} PNG files.")
 
 
 def scan_existing_files(watch_dir: Path):
@@ -319,10 +318,10 @@ def scan_existing_files(watch_dir: Path):
             if file_path.is_file():
                 known_files.add(file_path.name.lower())
         if verbose_mode:
-            print(f"📋 Found {len(known_files)} existing PNG files")
+            print(f"Found {len(known_files)} existing PNG files")
     except Exception as e:
         if verbose_mode:
-            print(f"⚠️  Warning: Could not scan existing files: {e}")
+            print(f"Warning: Could not scan existing files: {e}")
 
 
 def format_file_size(size_bytes: int) -> str:
@@ -341,24 +340,24 @@ def display_analysis(analysis: ScreenshotAnalysis):
     """Display the analysis results"""
     global verbose_mode
     
-    print(f"📝 Analysis Results:")
-    print(f"   📝 Title: {analysis.title}")
-    print(f"   💭 Short: {analysis.short_description}")
-    print(f"   📖 Long: {analysis.long_description}")
-    print(f"   🤖 AI: {analysis.ai_description}")
-    print(f"   🏷️  Type: {analysis.type}")
-    print(f"   🔞 Explicit: {'Yes' if analysis.explicit_content else 'No'}")
-    print(f"   📱 Apps: {', '.join(analysis.apps) if analysis.apps else 'None detected'}")
+    print(f"Analysis Results:")
+    print(f"    Title: {analysis.title}")
+    print(f"    Short: {analysis.short_description}")
+    print(f"    Long: {analysis.long_description}")
+    print(f"    AI: {analysis.ai_description}")
+    print(f"    Type: {analysis.type}")
+    print(f"    Explicit: {'Yes' if analysis.explicit_content else 'No'}")
+    print(f"    Apps: {', '.join(analysis.apps) if analysis.apps else 'None detected'}")
     
     if analysis.embedded_text:
         # Truncate long text for display
         text_preview = analysis.embedded_text[:200] + "..." if len(analysis.embedded_text) > 200 else analysis.embedded_text
-        print(f"   📄 Text: {text_preview}")
+        print(f"    Text: {text_preview}")
     else:
-        print(f"   📄 Text: None detected")
+        print(f"    Text: None detected")
     
     if verbose_mode:
-        print(f"   📋 Full JSON:")
+        print(f"Full JSON:")
         print(f"      {analysis.to_json()}")
 
 
@@ -380,33 +379,33 @@ def handle_new_png(file_path: Path, event_type: str):
                 file_size = file_path.stat().st_size
                 
                 # Print the filename
-                print(f"🆕 New PNG: {file_path.name}")
+                print(f"New PNG: {file_path.name}")
                 
                 if verbose_mode:
-                    print(f"   📁 Path: {file_path}")
-                    print(f"   📊 Size: {format_file_size(file_size)}")
-                    print(f"   🔄 Event: {event_type}")
+                    print(f"Path: {file_path}")
+                    print(f"Size: {format_file_size(file_size)}")
+                    print(f"Event: {event_type}")
                 
                 # Analyze with OpenAI if enabled
                 if analyze_mode:
-                    print(f"🔍 Analyzing screenshot with OpenAI...")
+                    print(f"Analyzing PNG with OpenAI...")
                     analysis = analyze_screenshot(file_path)
                     display_analysis(analysis)
                     
                     # Store analysis in PNG metadata
-                    print(f"💾 Storing analysis in PNG metadata...")
+                    print(f"Storing analysis in PNG metadata...")
                     success = store_analysis_in_png(file_path, analysis)
                     if success:
-                        print(f"✅ Analysis saved to PNG metadata")
+                        print(f"Analysis saved to PNG metadata")
                     else:
-                        print(f"❌ Failed to save analysis to PNG metadata")
+                        print(f"Failed to save analysis to PNG metadata")
                 
                 # Add to known files
                 known_files.add(filename_lower)
                 
             except (OSError, PermissionError) as e:
                 if verbose_mode:
-                    print(f"⚠️  Could not access {file_path.name}: {e}")
+                    print(f"Could not access {file_path.name}: {e}")
 
 
 class SimpleFileHandler(FileSystemEventHandler):
@@ -434,15 +433,15 @@ class SimpleFileHandler(FileSystemEventHandler):
 def validate_directory(directory_path: Path) -> bool:
     """Validate that the directory exists and is accessible"""
     if not directory_path.exists():
-        print(f"❌ Error: Directory does not exist: {directory_path}")
+        print(f"Error: Directory does not exist: {directory_path}")
         return False
     
     if not directory_path.is_dir():
-        print(f"❌ Error: Path is not a directory: {directory_path}")
+        print(f"Error: Path is not a directory: {directory_path}")
         return False
     
     if not os.access(directory_path, os.R_OK):
-        print(f"❌ Error: Directory is not readable: {directory_path}")
+        print(f"Error: Directory is not readable: {directory_path}")
         return False
     
     return True
@@ -516,7 +515,7 @@ Setup:
     analyze_mode = True
     
     if not args.scan and not args.watch:
-        print("❌ Error: Either --scan or --watch is required")
+        print("Error: Either --scan or --watch is required")
         sys.exit(1)
 
     
@@ -531,7 +530,7 @@ Setup:
     if analyze_mode:
         api_key = args.api_key or os.getenv('OPENAI_API_KEY')
         if not api_key:
-            print("❌ Error: OpenAI API key required for analysis.")
+            print("Error: OpenAI API key required for analysis.")
             print("   Set OPENAI_API_KEY environment variable or use --api-key flag")
             sys.exit(1)
         setup_openai_client(api_key)
@@ -539,7 +538,7 @@ Setup:
     # Handle scan mode
     if args.scan:
         if not analyze_mode:
-            print("❌ Error: --scan requires --analyze flag to be set")
+            print("Error: --scan requires --analyze flag to be set")
             print("   Use: --scan --analyze to scan and analyze existing files")
             sys.exit(1)
         
@@ -564,29 +563,29 @@ Setup:
     try:
         # Start watching
         observer.start()
-        print(f"🔍 Watching for new PNG files in: {directory_path}")
+        print(f"Watching for new PNG files in: {directory_path}")
         if verbose_mode:
-            print("📝 Verbose mode enabled")
+            print("Verbose mode enabled")
         if analyze_mode:
-            print("🤖 OpenAI analysis enabled")
-        print("👀 Waiting for new PNG files... (Press Ctrl+C to stop)")
+            print("OpenAI analysis enabled")
+        print("Waiting for new PNG files... (Press Ctrl+C to stop)")
         
         # Keep the script running
         while True:
             time.sleep(1)
             
     except KeyboardInterrupt:
-        print("\n⏹️  Stopping PNG watcher...")
+        print("\nStopping PNG watcher...")
         observer.stop()
         
     except Exception as e:
-        print(f"\n❌ Error: {e}")
+        print(f"\nError: {e}")
         observer.stop()
         sys.exit(1)
     
     # Wait for observer to finish
     observer.join()
-    print("✅ PNG watcher stopped")
+    print("PNG watcher stopped")
 
 
 if __name__ == "__main__":

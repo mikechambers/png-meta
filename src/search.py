@@ -14,6 +14,7 @@ from typing import List, Optional, Dict, Any
 from PIL import Image
 from openai import OpenAI
 from pydantic import BaseModel
+from config import META_TAG_NAME
 
 # Load environment variables from .env file
 try:
@@ -33,13 +34,13 @@ def read_analysis_from_png(image_path: Path) -> Optional[Dict[str, Any]]:
     """Read analysis metadata from PNG file"""
     try:
         with Image.open(image_path) as img:
-            if hasattr(img, 'text') and img.text and "ANALYSIS" in img.text:
-                analysis_json = img.text["ANALYSIS"]
+            if hasattr(img, 'text') and img.text and META_TAG_NAME in img.text:
+                analysis_json = img.text[META_TAG_NAME]
                 return json.loads(analysis_json)
         return None
     except Exception as e:
         if args.verbose:
-            print(f"⚠️  Error reading {image_path.name}: {e}")
+            print(f"Error reading {image_path.name}: {e}")
         return None
 
 
@@ -51,7 +52,7 @@ def collect_png_analyses(directory: Path) -> List[Dict[str, Any]]:
     total_files = len(png_files)
     
     if args.verbose:
-        print(f"🔍 Scanning {total_files} PNG files...")
+        print(f"Scanning {total_files} PNG files...")
     
     for png_file in png_files:
         analysis = read_analysis_from_png(png_file)
@@ -61,12 +62,12 @@ def collect_png_analyses(directory: Path) -> List[Dict[str, Any]]:
             analysis['_file_name'] = png_file.name
             analyses.append(analysis)
             if args.verbose:
-                print(f"   ✅ {png_file.name} - has analysis")
+                print(f"{png_file.name} - has analysis")
         elif args.verbose:
-            print(f"   ⏭️  {png_file.name} - no analysis, skipping")
+            print(f"{png_file.name} - no analysis, skipping")
     
     if args.verbose:
-        print(f"📊 Found {len(analyses)} PNG files with analysis metadata")
+        print(f"Found {len(analyses)} PNG files with analysis metadata")
     
     return analyses
 
@@ -144,22 +145,22 @@ Return the indices of screenshots that match the search query."""
         return matching_files
         
     except Exception as e:
-        print(f"❌ Error calling OpenAI API: {e}")
+        print(f"Error calling OpenAI API: {e}")
         return []
 
 
 def validate_directory(directory_path: Path) -> bool:
     """Validate that the directory exists and is accessible"""
     if not directory_path.exists():
-        print(f"❌ Error: Directory does not exist: {directory_path}")
+        print(f"Error: Directory does not exist: {directory_path}")
         return False
     
     if not directory_path.is_dir():
-        print(f"❌ Error: Path is not a directory: {directory_path}")
+        print(f"Error: Path is not a directory: {directory_path}")
         return False
     
     if not os.access(directory_path, os.R_OK):
-        print(f"❌ Error: Directory is not readable: {directory_path}")
+        print(f"Error: Directory is not readable: {directory_path}")
         return False
     
     return True
@@ -176,17 +177,17 @@ def open_files_on_mac(file_paths: List[str]) -> bool:
         result = subprocess.run(cmd, check=True, capture_output=True, text=True)
         
         if args.verbose:
-            print(f"🖥️  Opened {len(file_paths)} files with system default applications")
+            print(f"Opened {len(file_paths)} files with system default applications")
         
         return True
         
     except subprocess.CalledProcessError as e:
-        print(f"❌ Error opening files: {e}")
+        print(f"Error opening files: {e}")
         if args.verbose and e.stderr:
             print(f"   Error details: {e.stderr}")
         return False
     except Exception as e:
-        print(f"❌ Error opening files: {e}")
+        print(f"Error opening files: {e}")
         return False
 
 
@@ -269,7 +270,7 @@ Environment Variables:
     # Check OpenAI setup
     api_key = args.api_key or os.getenv('OPENAI_API_KEY')
     if not api_key:
-        print("❌ Error: OpenAI API key required for analysis search.")
+        print("Error: OpenAI API key required for analysis search.")
         print("   Set OPENAI_API_KEY environment variable or use --api-key flag")
         sys.exit(1)
     
@@ -278,13 +279,13 @@ Environment Variables:
     
     # Collect analysis data from PNG files
     if args.verbose:
-        print(f"📁 Searching directory: {directory_path}")
-        print(f"🔍 Search prompt: \"{args.prompt}\"")
+        print(f"Searching directory: {directory_path}")
+        print(f"Search prompt: \"{args.prompt}\"")
     
     analyses = collect_png_analyses(directory_path)
     
     if not analyses:
-        print("❌ No PNG files with analysis metadata found in directory")
+        print("No PNG files with analysis metadata found in directory")
         sys.exit(1)
     
     # Search using OpenAI
@@ -296,12 +297,12 @@ Environment Variables:
     else:
         if matching_files:
             if args.verbose:
-                print(f"\n🎯 Found {len(matching_files)} matching files:")
+                print(f"\nFound {len(matching_files)} matching files:")
             for file in matching_files:
-                print(file)
+                print(f'"{file}"')
         else:
             if args.verbose:
-                print("\n❌ No matching files found")
+                print("\nNo matching files found")
             else:
                 print("No matches found")
     
@@ -321,7 +322,7 @@ Environment Variables:
             open_files_on_mac(matching_files)
     elif args.open and not matching_files:
         if args.verbose:
-            print("🚫 No files to open")
+            print("No files to open")
 
 
 

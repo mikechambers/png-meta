@@ -1,0 +1,1 @@
+META_TAG_NAME="png-meta-data"
