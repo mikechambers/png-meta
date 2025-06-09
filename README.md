@@ -1,6 +1,6 @@
 # png-meta
 
-png-meta is a proof of concept project for storing AI generated descriptions of the PNG within the PNG to allow for content based searching and cataloging without having to analyize the image every time.
+png-meta is a proof of concept project that stores AI-generated image descriptions directly within PNG file metadata. This approach enables content-based searching and cataloging without needing to re-analyze images each time.
 
 The project consists of two main components:
 - **png-meta.py**: Watches directories and analyzes PNG files with AI and embeds meta data within the PNG
@@ -31,23 +31,6 @@ The analysis includes:
 - Application and interface identification
 - Content categorization (screenshot, photography, graphic)
 - Explicit content detection
-
-## PNG Meta Data
-
-The metadata is stored as a JSON object within the PNG in the `png-meta-data` tag, with the following top level properties:
-
-
-| Field | Type | Description |
-|-------|------|-------------|
-| title | string | Concise, descriptive title for the image (3-8 words) |
-| short_description | string | Brief one-sentence description (under 100 characters) |
-| long_description | string | Detailed description of what's shown in the image (2-4 sentences) |
-| ai_description | string | Technical analysis for AI systems including visual elements, composition, colors, style, etc. (2-3 sentences) |
-| explicit_content | boolean | true if image contains adult/explicit content, false otherwise |
-| embedded_text | string | All readable text extracted from the image, preserving structure when possible (includes UI elements, buttons, menus, document content, code, etc.) |
-| apps | array[string] | List of application names, window titles, or software interfaces visible in the image |
-| type | string | Image classification - one of: "screenshot", "photography", or "graphic" |
-
 
 ## Requirements
 
@@ -221,9 +204,31 @@ python png-search.py --dir ~/Pictures --prompt "real photos not screenshots"
 python png-search.py --dir ~/Downloads --prompt "charts or graphs"
 ```
 
+## PNG Meta Data
+
+The metadata is stored as a JSON object within the PNG in the `png-meta-data` tag, with the following top level properties:
+
+### Storage Method
+
+The metadata is stored within the PNG in the `png-meta-data` tag. The data is serialized as JSON and embedded directly into the PNG file without affecting the image quality or visual appearance.
+
+
+| Field | Type | Description |
+|-------|------|-------------|
+| title | string | Concise, descriptive title for the image (3-8 words) |
+| short_description | string | Brief one-sentence description (under 100 characters) |
+| long_description | string | Detailed description of what's shown in the image (2-4 sentences) |
+| ai_description | string | Technical analysis for AI systems including visual elements, composition, colors, style, etc. (2-3 sentences) |
+| explicit_content | boolean | true if image contains adult/explicit content, false otherwise |
+| embedded_text | string | All readable text extracted from the image, preserving structure when possible (includes UI elements, buttons, menus, document content, code, etc.) |
+| apps | array[string] | List of application names, window titles, or software interfaces visible in the image |
+| type | string | Image classification - one of: "screenshot", "photography", or "graphic" |
+
+
 ## Tips
 
 ### General Usage
+- You can use tools like exiftool to view the data
 - Let the analysis complete before making changes to files
 - Use descriptive search terms for better results
 - The AI is liberal in matching - if unsure, it includes results
