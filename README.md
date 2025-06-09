@@ -39,14 +39,14 @@ The metadata is stored as a JSON object within the PNG in the `png-meta-data` ta
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `title` | `string` | Concise, descriptive title for the image (3-8 words) |
-| `short_description` | `string` | Brief one-sentence description (under 100 characters) |
-| `long_description` | `string` | Detailed description of what's shown in the image (2-4 sentences) |
-| `ai_description` | `string` | Technical analysis for AI systems including visual elements, composition, colors, style, etc. (2-3 sentences) |
-| `explicit_content` | `boolean` | `true` if image contains adult/explicit content, `false` otherwise |
-| `embedded_text` | `string` | All readable text extracted from the image, preserving structure when possible (includes UI elements, buttons, menus, document content, code, etc.) |
-| `apps` | `array[string]` | List of application names, window titles, or software interfaces visible in the image |
-| `type` | `string` | Image classification - one of: `"screenshot"`, `"photography"`, or `"graphic"` |
+| title | string | Concise, descriptive title for the image (3-8 words) |
+| short_description | string | Brief one-sentence description (under 100 characters) |
+| long_description | string | Detailed description of what's shown in the image (2-4 sentences) |
+| ai_description | string | Technical analysis for AI systems including visual elements, composition, colors, style, etc. (2-3 sentences) |
+| explicit_content | boolean | true if image contains adult/explicit content, false otherwise |
+| embedded_text | string | All readable text extracted from the image, preserving structure when possible (includes UI elements, buttons, menus, document content, code, etc.) |
+| apps | array[string] | List of application names, window titles, or software interfaces visible in the image |
+| type | string | Image classification - one of: "screenshot", "photography", or "graphic" |
 
 
 ## Requirements
