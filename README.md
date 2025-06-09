@@ -4,7 +4,7 @@ png-meta is a powerful tool for automatically analyzing and cataloging PNG image
 
 The project consists of two main components:
 - **png-meta.py**: Watches directories and analyzes PNG files with AI
-- **search.py**: Searches through analyzed PNG files using natural language queries
+- **png-search.py**: Searches through analyzed PNG files using natural language queries
 
 Example use cases include:
 
@@ -99,23 +99,23 @@ python png-meta.py --dir . --scan
 
 ### Searching PNG Files
 
-Use `search.py` to find specific images using natural language:
+Use `png-search.py` to find specific images using natural language:
 
 ```bash
 # Basic search
-python search.py --dir ~/Screenshots --prompt "find screenshots with Terminal"
+python png-search.py --dir ~/Screenshots --prompt "find screenshots with Terminal"
 
 # Search with verbose output
-python search.py --dir ~/Desktop --prompt "images containing error messages" --verbose
+python png-search.py --dir ~/Desktop --prompt "images containing error messages" --verbose
 
 # Search and open matching files (macOS)
-python search.py --dir ~/Pictures --prompt "photos of cats" --open
+python png-search.py --dir ~/Pictures --prompt "photos of cats" --open
 
 # Get full file paths instead of filenames
-python search.py --dir . --prompt "code editors" --paths
+python png-search.py --dir . --prompt "code editors" --paths
 
 # Output results as JSON
-python search.py --dir ~/Desktop --prompt "screenshots with Python code" --json
+python png-search.py --dir ~/Desktop --prompt "screenshots with Python code" --json
 ```
 
 ### Command Line Options
@@ -130,7 +130,7 @@ python search.py --dir ~/Desktop --prompt "screenshots with Python code" --json
 --api-key KEY       OpenAI API key (or use OPENAI_API_KEY env var)
 ```
 
-#### search.py
+#### png-search.py
 
 ```
 --dir PATH          Directory to search in (required)
@@ -159,13 +159,13 @@ python png-meta.py --dir ~/Downloads --scan
 3. **Search for specific content**:
 ```bash
 # Find Terminal screenshots
-python search.py --dir ~/Screenshots --prompt "Terminal or command line"
+python png-search.py --dir ~/Screenshots --prompt "Terminal or command line"
 
 # Find code-related images
-python search.py --dir ~/Desktop --prompt "programming or code editors"
+python png-search.py --dir ~/Desktop --prompt "programming or code editors"
 
 # Find error messages
-python search.py --dir ~/Downloads --prompt "error dialogs or warning messages" --open
+python png-search.py --dir ~/Downloads --prompt "error dialogs or warning messages" --open
 ```
 
 ### Analysis Output
@@ -193,16 +193,16 @@ Example analysis output:
 
 ```bash
 # Find screenshots with specific applications
-python search.py --dir ~/Desktop --prompt "VS Code or code editor"
+python png-search.py --dir ~/Desktop --prompt "VS Code or code editor"
 
 # Find images with text content
-python search.py --dir ~/Screenshots --prompt "contains the word 'error'"
+python png-search.py --dir ~/Screenshots --prompt "contains the word 'error'"
 
 # Find photos vs screenshots
-python search.py --dir ~/Pictures --prompt "real photos not screenshots"
+python png-search.py --dir ~/Pictures --prompt "real photos not screenshots"
 
 # Find images by visual content
-python search.py --dir ~/Downloads --prompt "charts or graphs"
+python png-search.py --dir ~/Downloads --prompt "charts or graphs"
 ```
 
 ## Tips
@@ -269,13 +269,13 @@ If you continue to have issues, check that all dependencies are installed correc
 The project is structured for easy extension:
 
 - **Analysis Models**: Modify the Pydantic models in png-meta.py to change analysis structure
-- **Search Logic**: Enhance search capabilities in search.py
+- **Search Logic**: Enhance search capabilities in png-search.py
 - **File Handling**: Extend support for additional image formats
 - **Metadata**: Add custom metadata fields or storage options
 
 Key files:
 - `png-meta.py`: Main analysis and watching functionality
-- `search.py`: Search and retrieval system
+- `png-search.py`: Search and retrieval system
 - Analysis uses OpenAI's structured output for reliable results
 
 ## Questions, Feature Requests, Feedback
