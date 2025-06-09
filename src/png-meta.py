@@ -39,7 +39,7 @@ class ScreenshotAnalysisModel(BaseModel):
     explicit_content: bool
     embedded_text: str
     apps: List[str]
-    type: Literal["screenshot", "photography", "graphic"]
+    type: Literal["screenshot", "photograph", "graphic"]
 
 
 @dataclass
@@ -149,7 +149,7 @@ def analyze_screenshot(image_path: Path) -> ScreenshotAnalysis:
 **apps**: List of application names, window titles, or software interfaces visible in the image
 **type**: Classify as one of:
   - "screenshot": Computer/mobile screen capture, UI elements, applications
-  - "photography": Real-world photos, camera captures, people, places, objects
+  - "photograph": Real-world photos, camera captures, people, places, objects
   - "graphic": Digital art, illustrations, logos, designs, charts, diagrams
 
 Be thorough in text extraction and accurate in classification."""

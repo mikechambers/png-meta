@@ -9,7 +9,7 @@ The project consists of two main components:
 Example use cases include:
 
 - Automatically cataloging screenshots from your desktop or downloads folder
-- Adding rich metadata to photography collections
+- Adding rich metadata to photograph collections
 - Finding specific screenshots or images using natural language searches
 - Organizing large collections of PNG files based on their content
 - Creating searchable archives of visual content with embedded analysis
@@ -29,7 +29,7 @@ The analysis includes:
 - Descriptive titles and descriptions
 - Text extraction from screenshots and documents
 - Application and interface identification
-- Content categorization (screenshot, photography, graphic)
+- Content categorization (screenshot, photograph, graphic)
 - Explicit content detection
 
 ## Requirements
@@ -175,7 +175,7 @@ When analyzing images, png-meta extracts:
 - **Descriptions**: Brief and detailed descriptions
 - **Embedded Text**: All readable text from the image
 - **Applications**: Detected software interfaces
-- **Type**: Classification as screenshot, photography, or graphic
+- **Type**: Classification as screenshot, photograph, or graphic
 - **Content Flags**: Explicit content detection
 
 Example analysis output:
@@ -222,7 +222,7 @@ The metadata is stored within the PNG in the `png-meta-data` tag. The data is se
 | explicit_content | boolean | true if image contains adult/explicit content, false otherwise |
 | embedded_text | string | All readable text extracted from the image, preserving structure when possible (includes UI elements, buttons, menus, document content, code, etc.) |
 | apps | array[string] | List of application names, window titles, or software interfaces visible in the image |
-| type | string | Image classification - one of: "screenshot", "photography", or "graphic" |
+| type | string | Image classification - one of: "screenshot", "photograph", or "graphic" |
 
 
 ## Tips
