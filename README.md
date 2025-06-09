@@ -46,11 +46,6 @@ This project uses [uv](https://github.com/astral-sh/uv) for dependency managemen
 
 Download or clone the png-meta project to your desired location.
 
-### Install Dependencies
-
-```bash
-uv add watchdog openai python-dotenv pillow pydantic
-```
 
 ### OpenAI API Setup
 
@@ -78,9 +73,6 @@ python png-meta.py --dir ~/Screenshots --watch
 
 # Watch with verbose output
 python png-meta.py --dir ~/Downloads --watch --verbose
-
-# Watch current directory
-python png-meta.py --dir . --watch
 ```
 
 #### Scan Mode
@@ -92,9 +84,12 @@ python png-meta.py --dir ~/Pictures --scan
 
 # Scan with verbose output
 python png-meta.py --dir ~/Desktop --scan --verbose
+```
 
-# Scan current directory
-python png-meta.py --dir . --scan
+You can also scan and watch in the same command, with existing files in the directory scanned before the script starts watching the directory for changes:
+
+```
+python png-meta.py --dir ~/Screenshots --scan --watch
 ```
 
 ### Searching PNG Files
@@ -107,9 +102,6 @@ python png-search.py --dir ~/Screenshots --prompt "find screenshots with Termina
 
 # Search with verbose output
 python png-search.py --dir ~/Desktop --prompt "images containing error messages" --verbose
-
-# Search and open matching files (macOS)
-python png-search.py --dir ~/Pictures --prompt "photos of cats"
 
 # Get full file paths instead of filenames
 python png-search.py --dir . --prompt "code editors" --paths
@@ -167,6 +159,13 @@ python png-search.py --dir ~/Desktop --prompt "programming or code editors"
 python png-search.py --dir ~/Downloads --prompt "error dialogs or warning messages"
 ```
 
+4. Search and Open in Preview on Mac
+
+```bash
+# Find screenshots with specific applications and then open in preview on mac
+python png-search.py --dir ~/Desktop --prompt "VS Code or code editor"  --path | xargs open
+```
+
 ### Analysis Output
 
 When analyzing images, png-meta extracts:
@@ -178,35 +177,14 @@ When analyzing images, png-meta extracts:
 - **Type**: Classification as screenshot, photograph, or graphic
 - **Content Flags**: Explicit content detection
 
-Example analysis output:
-```
-📝 Analysis Results:
-   📝 Title: Terminal Python Script Execution
-   💭 Short: Terminal window showing Python script output
-   🏷️  Type: screenshot
-   📱 Apps: Terminal, Python
-   📄 Text: $ python script.py\nHello, World!\n$ 
-```
+## Metadata Storage
 
-### Search Examples
+png-meta embeds analysis data directly in PNG files using standard PNG text chunks. This means:
 
-```bash
-# Find screenshots with specific applications and then open in preview on mac
-python png-search.py --dir ~/Desktop --prompt "VS Code or code editor"  --path | xargs open
-
-# Find images with text content
-python png-search.py --dir ~/Screenshots --prompt "contains the word 'error'"
-
-# Find photos vs screenshots
-python png-search.py --dir ~/Pictures --prompt "real photos not screenshots"
-
-# Find images by visual content
-python png-search.py --dir ~/Downloads --prompt "charts or graphs"
-```
-
-## PNG Meta Data
-
-The metadata is stored as a JSON object within the PNG in the `png-meta-data` tag, with the following top level properties:
+- Analysis travels with the file when copied or moved
+- No external database required
+- Standard PNG readers can access the metadata
+- Original image quality is preserved
 
 ### Storage Method
 
@@ -225,6 +203,7 @@ The metadata is stored within the PNG in the `png-meta-data` tag. The data is se
 | type | string | Image classification - one of: "screenshot", "photograph", or "graphic" |
 
 
+
 ## Tips
 
 ### General Usage
@@ -233,11 +212,6 @@ The metadata is stored within the PNG in the `png-meta-data` tag. The data is se
 - Use descriptive search terms for better results
 - The AI is liberal in matching - if unsure, it includes results
 - Verbose mode shows detailed progress and debugging info
-
-### File Organization
-- png-meta works best with organized directory structures
-- Consider separate folders for screenshots vs photos vs graphics
-- The analysis metadata travels with the PNG files when moved
 
 ### Search Optimization
 - Use natural language in search prompts
@@ -249,16 +223,6 @@ The metadata is stored within the PNG in the `png-meta-data` tag. The data is se
 - Subsequent searches are fast as they use embedded metadata
 - Watch mode processes files as they appear, spreading the load
 
-## Metadata Storage
-
-png-meta embeds analysis data directly in PNG files using standard PNG text chunks. This means:
-
-- Analysis travels with the file when copied or moved
-- No external database required
-- Standard PNG readers can access the metadata
-- Original image quality is preserved
-
-The metadata is stored in the "ANALYSIS" text chunk as JSON and includes all analysis results except filename and file path.
 
 ## Troubleshooting
 
@@ -302,7 +266,7 @@ Key files:
 
 This project demonstrates the power of combining AI vision analysis with embedded metadata for intelligent file organization and retrieval.
 
-For questions, feature requests, or feedback, please open an issue on the project repository.
+For questions, feature requests, or feedback, please open an [issue](https://github.com/mikechambers/png-meta/issues) on the project repository.
 
 ## License
 
