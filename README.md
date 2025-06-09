@@ -69,10 +69,10 @@ Monitor a directory for new PNG files and analyze them automatically:
 
 ```bash
 # Basic watching with analysis
-python png-meta.py --dir ~/Screenshots --watch
+uv run png-meta.py --dir ~/Screenshots --watch
 
 # Watch with verbose output
-python png-meta.py --dir ~/Downloads --watch --verbose
+uv run png-meta.py --dir ~/Downloads --watch --verbose
 ```
 
 #### Scan Mode
@@ -80,10 +80,10 @@ Analyze existing PNG files in a directory:
 
 ```bash
 # Scan and analyze all PNG files
-python png-meta.py --dir ~/Pictures --scan
+uv run png-meta.py --dir ~/Pictures --scan
 
 # Scan with verbose output
-python png-meta.py --dir ~/Desktop --scan --verbose
+uv run png-meta.py --dir ~/Desktop --scan --verbose
 ```
 
 You can also scan and watch in the same command, with existing files in the directory scanned before the script starts watching the directory for changes:
@@ -98,16 +98,16 @@ Use `png-search.py` to find specific images using natural language:
 
 ```bash
 # Basic search
-python png-search.py --dir ~/Screenshots --prompt "find screenshots with Terminal"
+uv run png-search.py --dir ~/Screenshots --prompt "find screenshots with Terminal"
 
 # Search with verbose output
-python png-search.py --dir ~/Desktop --prompt "images containing error messages" --verbose
+uv run png-search.py --dir ~/Desktop --prompt "images containing error messages" --verbose
 
 # Get full file paths instead of filenames
-python png-search.py --dir . --prompt "code editors" --paths
+uv run png-search.py --dir . --prompt "code editors" --paths
 
 # Output results as JSON
-python png-search.py --dir ~/Desktop --prompt "screenshots with Python code" --json
+uv run png-search.py --dir ~/Desktop --prompt "screenshots with Python code" --json
 ```
 
 ### Command Line Options
@@ -139,31 +139,31 @@ python png-search.py --dir ~/Desktop --prompt "screenshots with Python code" --j
 
 1. **Set up automatic analysis** of your Screenshots folder:
 ```bash
-python png-meta.py --dir ~/Screenshots --watch --verbose
+uv run png-meta.py --dir ~/Screenshots --watch --verbose
 ```
 
 2. **Analyze existing files** in your Downloads:
 ```bash
-python png-meta.py --dir ~/Downloads --scan
+uv run png-meta.py --dir ~/Downloads --scan
 ```
 
 3. **Search for specific content**:
 ```bash
 # Find Terminal screenshots
-python png-search.py --dir ~/Screenshots --prompt "Terminal or command line"
+uv run png-search.py --dir ~/Screenshots --prompt "Terminal or command line"
 
 # Find code-related images
-python png-search.py --dir ~/Desktop --prompt "programming or code editors"
+uv run png-search.py --dir ~/Desktop --prompt "programming or code editors"
 
 # Find error messages
-python png-search.py --dir ~/Downloads --prompt "error dialogs or warning messages"
+uv run png-search.py --dir ~/Downloads --prompt "error dialogs or warning messages"
 ```
 
 4. Search and Open in Preview on Mac
 
 ```bash
 # Find screenshots with specific applications and then open in preview on mac
-python png-search.py --dir ~/Desktop --prompt "VS Code or code editor"  --path | xargs open
+uv run png-search.py --dir ~/Desktop --prompt "VS Code or code editor"  --path | xargs open
 ```
 
 ### Analysis Output
