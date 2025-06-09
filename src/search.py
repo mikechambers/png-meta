@@ -165,32 +165,6 @@ def validate_directory(directory_path: Path) -> bool:
     
     return True
 
-
-def open_files_on_mac(file_paths: List[str]) -> bool:
-    """Open files using macOS 'open' command"""
-    try:
-        if not file_paths:
-            return False
-        
-        # Use the 'open' command to open all files at once
-        cmd = ['open'] + file_paths
-        result = subprocess.run(cmd, check=True, capture_output=True, text=True)
-        
-        if args.verbose:
-            print(f"Opened {len(file_paths)} files with system default applications")
-        
-        return True
-        
-    except subprocess.CalledProcessError as e:
-        print(f"Error opening files: {e}")
-        if args.verbose and e.stderr:
-            print(f"   Error details: {e.stderr}")
-        return False
-    except Exception as e:
-        print(f"Error opening files: {e}")
-        return False
-
-
 def main():
     """Main function"""
     global args
@@ -202,8 +176,7 @@ def main():
 Examples:
   %(prog)s --dir ~/Desktop/ --prompt "show me screenshots with Terminal"
   %(prog)s --dir ~/Screenshots/ --prompt "find images with code editors" --verbose
-  %(prog)s --dir ~/Desktop/ --prompt "screenshots containing error messages" --open
-  %(prog)s --dir . --prompt "images with text about Python" -v --open
+  %(prog)s --dir ~/Desktop/ --prompt "screenshots containing error messages"
   
 Environment Variables:
   OPENAI_API_KEY    Your OpenAI API key for analysis search
@@ -220,12 +193,6 @@ Environment Variables:
         '--prompt',
         required=True,
         help='Search prompt describing what you\'re looking for'
-    )
-    
-    parser.add_argument(
-        '--open',
-        action='store_true',
-        help='Open matching files with macOS default applications'
     )
     
     parser.add_argument(
@@ -305,25 +272,6 @@ Environment Variables:
                 print("\nNo matching files found")
             else:
                 print("No matches found")
-    
-    # Open files if requested
-    if args.open and matching_files:
-        # For opening, we always want full paths
-        if not args.paths:
-            # Convert filenames to full paths for opening
-            full_paths = []
-            for filename in matching_files:
-                if filename.startswith('/'):
-                    full_paths.append(filename)  # Already a full path
-                else:
-                    full_paths.append(str(directory_path / filename))
-            open_files_on_mac(full_paths)
-        else:
-            open_files_on_mac(matching_files)
-    elif args.open and not matching_files:
-        if args.verbose:
-            print("No files to open")
-
 
 
 if __name__ == "__main__":
