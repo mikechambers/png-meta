@@ -6,6 +6,9 @@ The project consists of two main components:
 - **png-meta.py**: Watches directories and analyzes PNG files with AI and embeds meta data within the PNG
 - **png-search.py**: Searches through analyzed PNG files using natural language queries
 
+View a video here:    
+https://www.youtube.com/watch?v=9_e3rYqtEFA
+
 Example use cases include:
 
 - Automatically cataloging screenshots from your desktop or downloads folder
