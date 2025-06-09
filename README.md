@@ -1,9 +1,9 @@
 # png-meta
 
-png-meta is a powerful tool for automatically analyzing and cataloging PNG images using AI. It watches directories for new PNG files, analyzes their content using OpenAI's vision models, and embeds the analysis metadata directly into the PNG files themselves. The project also includes intelligent search capabilities to find specific images based on their content.
+png-meta is a proof of concept project for storing AI generated descriptions of the PNG within the PNG to allow for content based searching and cataloging without having to analyize the image every time.
 
 The project consists of two main components:
-- **png-meta.py**: Watches directories and analyzes PNG files with AI
+- **png-meta.py**: Watches directories and analyzes PNG files with AI and embeds meta data within the PNG
 - **png-search.py**: Searches through analyzed PNG files using natural language queries
 
 Example use cases include:
@@ -31,6 +31,23 @@ The analysis includes:
 - Application and interface identification
 - Content categorization (screenshot, photography, graphic)
 - Explicit content detection
+
+## PNG Meta Data
+
+The metadata is stored as a JSON object within the PNG in the `png-meta-data` tag, with the following top level properties:
+
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `title` | `string` | Concise, descriptive title for the image (3-8 words) |
+| `short_description` | `string` | Brief one-sentence description (under 100 characters) |
+| `long_description` | `string` | Detailed description of what's shown in the image (2-4 sentences) |
+| `ai_description` | `string` | Technical analysis for AI systems including visual elements, composition, colors, style, etc. (2-3 sentences) |
+| `explicit_content` | `boolean` | `true` if image contains adult/explicit content, `false` otherwise |
+| `embedded_text` | `string` | All readable text extracted from the image, preserving structure when possible (includes UI elements, buttons, menus, document content, code, etc.) |
+| `apps` | `array[string]` | List of application names, window titles, or software interfaces visible in the image |
+| `type` | `string` | Image classification - one of: `"screenshot"`, `"photography"`, or `"graphic"` |
+
 
 ## Requirements
 
@@ -109,7 +126,7 @@ python png-search.py --dir ~/Screenshots --prompt "find screenshots with Termina
 python png-search.py --dir ~/Desktop --prompt "images containing error messages" --verbose
 
 # Search and open matching files (macOS)
-python png-search.py --dir ~/Pictures --prompt "photos of cats" --open
+python png-search.py --dir ~/Pictures --prompt "photos of cats"
 
 # Get full file paths instead of filenames
 python png-search.py --dir . --prompt "code editors" --paths
@@ -135,7 +152,6 @@ python png-search.py --dir ~/Desktop --prompt "screenshots with Python code" --j
 ```
 --dir PATH          Directory to search in (required)
 --prompt TEXT       Search query describing what to find (required)
---open              Open matching files with system default apps (macOS)
 --verbose, -v       Enable detailed output
 --paths, -p         Return full file paths instead of filenames
 --json              Output results as JSON array
@@ -165,7 +181,7 @@ python png-search.py --dir ~/Screenshots --prompt "Terminal or command line"
 python png-search.py --dir ~/Desktop --prompt "programming or code editors"
 
 # Find error messages
-python png-search.py --dir ~/Downloads --prompt "error dialogs or warning messages" --open
+python png-search.py --dir ~/Downloads --prompt "error dialogs or warning messages"
 ```
 
 ### Analysis Output
@@ -192,8 +208,8 @@ Example analysis output:
 ### Search Examples
 
 ```bash
-# Find screenshots with specific applications
-python png-search.py --dir ~/Desktop --prompt "VS Code or code editor"
+# Find screenshots with specific applications and then open in preview on mac
+python png-search.py --dir ~/Desktop --prompt "VS Code or code editor"  --path | xargs open
 
 # Find images with text content
 python png-search.py --dir ~/Screenshots --prompt "contains the word 'error'"
@@ -222,7 +238,6 @@ python png-search.py --dir ~/Downloads --prompt "charts or graphs"
 - Use natural language in search prompts
 - Be specific about what you're looking for
 - Combine multiple search terms for refined results
-- Use the `--open` flag to quickly view results on macOS
 
 ### Performance
 - Large directories may take time to analyze initially
